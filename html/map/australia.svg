@@ -1,0 +1,57 @@
+<?php
+header('Content-Type: image/svg+xml');
+header('Cache-Control: no-cache, no-store, must-revalidate');
+header('X-LiteSpeed-Cache-Control: no-cache, no-store');
+#header('Cache-Control: public, max-age=86400, stale-while-revalidate=86400');
+header('Expires: ' . date('r'));
+?>
+<svg viewBox="113 10 41 34" xmlns="http://www.w3.org/2000/svg">
+    <link xmlns="http://www.w3.org/1999/xhtml" rel="stylesheet" href="map.css" type="text/css"/>
+
+    <!-- View Boxes for zooming in -->
+    <view id="NEM" viewBox="129 10 25 34" />
+    <rect class="viewBox" x="129" y="10" width="25" height="34" />
+    <view id="Mainland" viewBox="129 10 25 29" />
+    <rect class="viewBox" x="129" y="10" width="25" height="29" />
+    <view id="QLD" viewBox="138 11 16 19" />
+    <rect class="viewBox" x="138" y="11" width="16" height="19" />
+    <view id="NSW" viewBox="140 28 14 9" />
+    <rect class="viewBox" x="140" y="28" width="14" height="9" />
+    <view id="NSWN" viewBox="149 28 5 4" />
+    <rect class="viewBox" x="149" y="28" width="5" height="4" />
+    <view id="VIC" viewBox="140 34 10 5" />
+    <rect class="viewBox" x="140" y="34" width="10" height="5" />
+    <view id="SA" viewBox="129 26 12 12" />
+    <rect class="viewBox" x="129" y="26" width="12" height="12" />
+    <view id="WA" viewBox="113 14 16 21" />
+    <rect class="viewBox" x="113" y="14" width="16" height="21" />
+    <view id="TAS" viewBox="144 40 5 4" />
+    <rect class="viewBox" x="144" y="40" width="5" height="4" />
+
+    <g transform="matrix(1 0 0 -1 0 0)">
+        <path class="state-border state-border-inner" d="
+            M 129.01,-14.93 L 129.03,-31.70
+            M 138.02,-16.56 L 138.00,-26.01
+            M 128.99,-26.01 L 140.99,-26.01 140.99,-38.04
+            M 140.99,-29.04 L 151.42,-28.93 153.68,-28.16
+            M 140.99,-34.01 L 149.98,-37.46
+            " />
+        <path class="state-border state-border-outer" d="
+            M 138.02,-16.56 
+            L 140.66,-17.74 142.50,-10.72 146.35,-18.95 152.76,-25.17 153.68,-28.16
+            L 152.96,-31.51 151.40,-33.48 149.98,-37.46
+            L 146.41,-38.76 140.99,-38.04
+            L 135.60,-34.80 133.43,-32.13 129.03,-31.70
+            L 117.19,-35.11 114.99,-33.97 113.08,-22.87 126.92,-13.95 129.01,-14.93
+            L 131.01,-11.98 136.61,-12.22 135.40,-14.91 138.02,-16.56
+            Z" />
+        <path class="state-border state-border-outer" d="
+            M 146.38,-41.18
+            L 148.28,-40.75 148.25,-42.02 146.85,-43.63 146.06,-43.52 144.58,-40.65
+            Z" />
+<?php
+    define('CALLED_BY_MAP', 1);
+    require('drawpower.php');
+?>
+    </g>
+</svg>

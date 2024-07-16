@@ -1,0 +1,69 @@
+<?php
+header('Content-type: text/css');
+header('Cache-Control: no-cache, no-store, must-revalidate');
+header('X-LiteSpeed-Cache-Control: no-cache, no-store');
+#header('Cache-Control: public, max-age=86400, stale-while-revalidate=86400');
+header('Expires: ' . date('r'));
+?>
+
+.place {
+  r: 0.02px;
+}
+
+.powerline {
+  stroke-width: 0.01px;
+  fill: none;
+}
+.powerline[kva="500"] {
+  stroke: rgb(255, 250, 173);
+}
+.powerline[kva="330"] {
+  stroke: rgb(255, 225, 174);
+}
+.powerline[kva="275"] {
+  stroke: rgb(255, 176, 219);
+}
+.powerline[kva="220"] {
+  stroke: rgb(175, 175, 255);
+}
+.powerline[kva="132"], .powerline[kva="110"] {
+  stroke: rgb(176, 248, 255);
+}
+.powerline[kva="66"] {
+  stroke: rgb(215, 215, 215);
+}
+
+
+@keyframes dash {
+  to {
+    stroke-dashoffset: 1;
+  }
+}
+.powerline[load^="+"] {
+  animation: 5s linear 0s infinite forwards dash;
+}
+.powerline[load^="-"] {
+  animation: 5s linear 0s infinite reverse dash;
+}
+.powerline[load] {
+  stroke: red;
+}
+<?php
+  for ($i = 0; $i <= 100; $i++) {
+    printf('.powerline[load$="%03u"] { stroke-dasharray: 0.%03upx 0.%03upx; }%s', $i, $i, 100-$i, "\n");
+  }
+?>
+
+
+.state-border {
+  stroke: black;
+  stroke-width: 0.01px;
+  fill: none;
+}
+
+.viewBox {
+  display: none;
+  stroke: red;
+  stroke-width: 0.1px;
+  fill: none;
+}
