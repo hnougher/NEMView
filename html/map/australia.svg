@@ -1,9 +1,24 @@
 <?php
+// Calculate the next time a refresh should happen, randomness is added to prevent all clients refreshing at the same time
+$secToNext = 300 - (time() % 300) + 90;
+if ($secToNext > 300) $secToNext -= 300;
+header('Refresh: ' . $secToNext + rand(0,30));
+
+// Set the cache headers
+if ($_SERVER['SERVER_NAME'] == 'nemview.hgn.id.au') {
+  header('Expires: ' . date('r', time() + $secToNext-5));
+  header(            'Cache-Control: public, max-age='.max(0,$secToNext-5).', stale-while-revalidate=300');
+  header('X-LiteSpeed-Cache-Control: public, max-age='.max(0,$secToNext-5).', stale-while-revalidate=300');
+  echo '<!-- Cached from ' .date('r', time()). ' -->';
+} else {
+  # No caching, for debugging
+  header('Expires: ' . date('r'));
+  header(            'Cache-Control: no-cache, no-store, must-revalidate');
+  header('X-LiteSpeed-Cache-Control: no-cache, no-store');
+  echo '<!-- Not cached -->';
+}
+
 header('Content-Type: image/svg+xml');
-header('Cache-Control: no-cache, no-store, must-revalidate');
-header('X-LiteSpeed-Cache-Control: no-cache, no-store');
-#header('Cache-Control: public, max-age=86400, stale-while-revalidate=86400');
-header('Expires: ' . date('r'));
 ?>
 <svg viewBox="113 10 41 34" xmlns="http://www.w3.org/2000/svg">
     <link xmlns="http://www.w3.org/1999/xhtml" rel="stylesheet" href="map.css" type="text/css"/>
@@ -17,8 +32,12 @@ header('Expires: ' . date('r'));
     <rect class="viewBox" x="138" y="11" width="16" height="19" />
     <view id="NSW" viewBox="140 28 14 9" />
     <rect class="viewBox" x="140" y="28" width="14" height="9" />
-    <view id="NSWN" viewBox="149 28 5 4" />
-    <rect class="viewBox" x="149" y="28" width="5" height="4" />
+    <view id="NSWN" viewBox="149 28 5 5" />
+    <rect class="viewBox" x="149" y="28" width="5" height="5" />
+    <view id="NSWS" viewBox="146 32 6 5" />
+    <rect class="viewBox" x="146" y="32" width="6" height="5" />
+    <view id="NSWW" viewBox="140 31.5 7 5" />
+    <rect class="viewBox" x="140" y="31.5" width="7" height="5" />
     <view id="VIC" viewBox="140 34 10 5" />
     <rect class="viewBox" x="140" y="34" width="10" height="5" />
     <view id="SA" viewBox="129 26 12 12" />
@@ -29,6 +48,13 @@ header('Expires: ' . date('r'));
     <rect class="viewBox" x="144" y="40" width="5" height="4" />
 
     <g transform="matrix(1 0 0 -1 0 0)">
+        <text x="148" y="28.2" style="fill:black; font-size: 0.1px; white-space: break-spaces" transform="scale(1 -1)">
+This is in development, using the latest dispatch interval from AEMO.
+This uses AEMO's dispatch contraint equations, but is still an ESTIMATION, not accurate.
+Many lines have no constraint equations in the interval, and therefore now data to show.
+Red is energy flow. Blue is constraint below power line rating.
+Source code will be at https://github.com/hnougher/NEMView
+        </text>
         <path class="state-border state-border-inner" d="
             M 129.01,-14.93 L 129.03,-31.70
             M 138.02,-16.56 L 138.00,-26.01
