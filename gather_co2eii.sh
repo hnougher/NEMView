@@ -49,3 +49,5 @@ EOF
 rm $working_dir/$filename.CSV -f
 rm $working_dir/$filename.processed.CSV -f
 rm $working_dir/$filename.final.CSV -f
+
+echo 'Script Complete'

@@ -112,3 +112,4 @@ INSERT INTO hn_constraints (constraint_id)
 COMMIT;
 EOF
 
+echo 'Script Complete'

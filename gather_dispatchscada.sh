@@ -2,6 +2,12 @@
 # This script is run on a 5 minute interval to download the latest data from the AEMO website.
 # Once downloaded the file needs to be unzipped, then processed since the file is a few CSV files concatenated together.
 # The processed data is then uploaded to the PostgreSQL database using the COPY command.
+
+## Useful cleanup SQL when things have gone wrong
+#-- Find newest date in table
+#--SELECT MAX(settlementdate), to_char(MAX(settlementdate),'YYYYMMDDHH24MI') FROM dispatch_scada;
+#-- Be carful of multiple gatherers running at the same time
+#--DELETE FROM dispatch_scada WHERE settlementdate >= '2025-11-16 06:00:00+10';
 echo '-----------------------'
 
 # Rotate the log file if larger than 1MB
@@ -40,7 +46,7 @@ do
 	wget -O $working_dir/$filename.zip http://nemweb.com.au/Reports/CURRENT/Dispatch_SCADA/$filename.zip
 	unzip $working_dir/$filename.zip -d $working_dir
 
-	## DISPATCH_REGIONSUM table
+	## DISPATCH_SCADA table
 	# Process the file part 1
 	# Remove everything before a line starting with "I,DISPATCH,UNIT_SCADA,", keeping the line
 	# And remove everything from a line starting with "C,"END OF REPORT"," onwards
@@ -68,3 +74,4 @@ EOF
 	sleep 1
 done
 
+echo 'Script Complete'
