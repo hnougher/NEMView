@@ -14,37 +14,38 @@ if ($_SERVER['SERVER_NAME'] == 'nemview.hgn.id.au') {
 }
 ?>
 
-<h2>Maps</h2>
-<a href="/map">Map</a><br>
-<a href="/map/australia.svg#QLD">QLD</a><br>
-<a href="/map/australia.svg#NSW">NSW</a><br>
-<a href="/map/australia.svg#NSWN">NSW North</a><br>
-<a href="/map/australia.svg#NSWS">NSW South</a><br>
-<a href="/map/australia.svg#NSWW">NSW West</a><br>
-<a href="/map/australia.svg#VIC">VIC</a><br>
-<a href="/map/australia.svg#SA">SA</a><br>
-<a href="/map/australia.svg#TAS">TAS</a><br>
+<h2>Maps (trial, incomplete)</h2>
+<a href="/map">Map</a> (<?php
+$regions = array('QLD','NSW','NSWN','NSWS','NSWW','VIC','SA','TAS');
+foreach ($regions as $region)
+  printf('<a href="/map/australia.svg#%s">%s</a> ', $region, $region);
+?>)
 
 <h2>Graphs</h2>
 
 <h3>Dispatch Region Summaries</h3>
-<?php
-printf('<a href="/graph/dispatch_nemsum/NEM">NEM</a><br>');
+
+Full <a href="/graph/dispatch_nemsum/NEM">NEM</a> (<?php
 $regions = array('NSW1', 'QLD1', 'SA1', 'TAS1', 'VIC1');
 foreach ($regions as $region)
-  printf('<a href="/graph/dispatch_regionsum/%s">%s</a><br>', $region, $region);
-?>
+  printf('<a href="/graph/dispatch_regionsum/%s">%s</a> ', $region, $region);
+?>)<br>
+
+Simplified (<?php
+foreach ($regions as $region)
+  printf('<a href="/graph/dispatch_regionsum_simple/%s">%s</a> ', $region, $region);
+?>)
 
 <h3>Dispatch SCADA</h3>
 <?php
 foreach ($regions as $region) {
-  printf('<a href="/graph/dispatch_scada/%s">%s</a> (', $region, $region);
-  printf('<a href="/graph/dispatch_scada/%s/es2">Battery</a>, ', $region);
-  printf('<a href="/graph/dispatch_scada/%s/es2072">Coal+Gas</a>, ', $region);
-  printf('<a href="/graph/dispatch_scada/%s/es256">Hydro</a>, ', $region);
-  printf('<a href="/graph/dispatch_scada/%s/es4096">Solar</a>, ', $region);
-  printf('<a href="/graph/dispatch_scada/%s/es8192">Wind</a>, ', $region);
-  printf('<a href="/graph/dispatch_scada/%s/es1765">Other</a>)<br>', $region);
+  printf('<a href="/graph/dispatch_scada/%s">%s</a> ( ', $region, $region);
+  printf('<a href="/graph/dispatch_scada/%s/es2">Battery</a> ', $region);
+  printf('<a href="/graph/dispatch_scada/%s/es2072">Coal+Gas</a> ', $region);
+  printf('<a href="/graph/dispatch_scada/%s/es256">Hydro</a> ', $region);
+  printf('<a href="/graph/dispatch_scada/%s/es4096">Solar</a> ', $region);
+  printf('<a href="/graph/dispatch_scada/%s/es8192">Wind</a> ', $region);
+  printf('<a href="/graph/dispatch_scada/%s/es1765">Other</a> )<br>', $region);
 }
 ?>
 <br>
