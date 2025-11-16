@@ -114,12 +114,14 @@ $definitions = [
         'interval' => ['pattern' => '/^(?:([1-7])(days?)|([12]?[0-9])(hours?))$/', 'replacement' => '$1$3 $2$4', 'default' => '2 days'],
       ],
       'string_params' => [],
-      'data_y_max' => ['fields' => ['dispatchablegeneration','demand_and_nonschedgen'], 'multiplier' => 1.0],
+      'data_x_minmax' => ['field' => 'settlementdate'],
+      'data_y_max' => ['startat' => 0, 'fields' => ['dispatchablegeneration','demand_and_nonschedgen']],
+      'data_y_min' => ['startat' => 0, 'fields' => ['dispatchableload','bdu_clearedmw_load']],
       'settings' => [
         'colours' => ['red', 'blue', 'orange', 'yellowgreen', 'olive', 'purple', 'purple'],
         'line_dash' => ['0',    '0',      '0',           '0',     '0',      '0',      '0'],
         'line_stroke_width' => [2,2,        2,             1,       1,        2,        2],
-        'graph_title' => 'Simplified {primary} Dispatch Regional Summary',
+        'graph_title' => 'Simple {primary} Dispatch Regional Summary',
         'label' => [[$graphWidth/2, 38, "Dispatch values are what was supposed to happen in the next 5 minutes, not what happened in hindsight", 'font_size' => 8]],
         'legend_entries' => [
           'Operational Demand', 'Dispatched Generation', 'Dispatched Load w/o BDU',
@@ -150,7 +152,9 @@ $definitions = [
         'interval' => ['pattern' => '/^(?:([1-7])(days?)|([12]?[0-9])(hours?))$/', 'replacement' => '$1$3 $2$4', 'default' => '2 days'],
       ],
       'string_params' => [],
-      'data_y_max' => ['fields' => ['dispatchablegeneration','demand_and_nonschedgen'], 'multiplier' => 1.0],
+      'data_x_minmax' => ['field' => 'settlementdate'],
+      'data_y_max' => ['startat' => 0, 'fields' => ['dispatchablegeneration','demand_and_nonschedgen']],
+      'data_y_min' => ['startat' => 0, 'fields' => ['dispatchableload','bdu_clearedmw_load']],
       'settings' => [
         'colours' => ['red','red', 'blue', 'blue', 'orange', 'orange',  'yellowgreen', 'olive', 'green', 'yellowgreen', 'olive', 'mediumaquamarine', 'brown', 'magenta', 'purple', 'purple', 'purple', 'purple'],
         'line_dash' => ['1',  '0',    '1',    '0',      '1',      '0',            '1',     '1',     '0',           '0',     '0',                '0',     '0',       '0',      '1',      '1',      '0',      '0'],
@@ -159,7 +163,7 @@ $definitions = [
         'label' => [[$graphWidth/2, 44, "Dispatch values are what was supposed to happen in the next 5 minutes, not what happened in hindsight\nCoal, Gas, Hydro is SCADA data and doesn't consider powerline losses, hence a 0.9 multiplier, hence an estimate (see TAS1)", 'font_size' => 8]],
         'legend_entries' => [
           'Market Demand', 'Operational Demand', 'Reserve Generation', 'Dispatched Generation', 'Available Load w/o BDU', 'Dispatched Load w/o BDU',
-          null,null, 'Solar+Wind+(Hydro*0.9)',null,null,null, 'Coal + Gas(Pipeline) *0.9',
+          null,null, 'Solar+Wind+(Hydro*0.9)',null,null,null, '(Coal+Gas(Pipeline))*0.9',
           'WDR Dispatched', 'BDU Min/Max', 'BDU Min/Max', 'BDU Gen/Load',null
         ],
         'structure' => [
@@ -403,11 +407,21 @@ if (count($data) == 0) {
   die('Error 404: Empty dataset.');
 }
 
-// Is there axis limits in settings?
+// Is there X axis limits in settings?
+// This assumes data is sorted to save loop churn
+if (isset($template['data_x_minmax'])) {
+  $data_x_minmax = $template['data_x_minmax'];
+  $max = $data[count($data)-1][$data_x_minmax['field']];
+  $min = $data[0][$data_x_minmax['field']];
+  #var_dump($max, $min);
+  $settings['axis_max_h'] = $max;
+  $settings['axis_min_h'] = $min;
+}
+
+// Is there Y axis limits in settings?
 if (isset($template['data_y_max'])) {
   $data_y_max = $template['data_y_max'];
-  $max = PHP_INT_MIN;
-  // Is it a field maximum?
+  $max = $data_y_max['startat'];
   if (isset($data_y_max['fields']))
     foreach ($data as $row)
       foreach ($data_y_max['fields'] as $field)
@@ -415,6 +429,17 @@ if (isset($template['data_y_max'])) {
   if (isset($data_y_max['multiplier']))
     $max = $max * $data_y_max['multiplier'];
   $settings['axis_max_v'] = $max;
+}
+if (isset($template['data_y_min'])) {
+  $data_y_min = $template['data_y_min'];
+  $min = $data_y_min['startat'];
+  if (isset($data_y_min['fields']))
+    foreach ($data as $row)
+      foreach ($data_y_min['fields'] as $field)
+        $min = min($min, $row[$field]);
+  if (isset($data_y_min['multiplier']))
+    $min = $min * $data_y_min['multiplier'];
+  $settings['axis_min_v'] = $min;
 }
 
 // Debug of values sent to graph
