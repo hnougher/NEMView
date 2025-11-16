@@ -57,7 +57,7 @@ $definitions = [
       'year' => 'Y'
     ],
     'graph_title' => 'Undefined Graph Title',
-    'label_h' => 'Time',
+    'label_h' => 'NEM Time',
     'label_v' => 'MW',
     'legend_autohide' => true,
     'legend_draggable' => true,
@@ -101,6 +101,41 @@ $definitions = [
       ]
     ],
 
+    'dispatch_regionsum_simple' => [
+      'type' => 'MultiLineGraph',
+      'identifier_sql' => "SELECT regionid FROM public.dispatch_regionsum WHERE regionid = :primary LIMIT 1",
+      'identifier_params' => [],
+      'data_sql' => "SELECT *
+        FROM public.graph_dispatch_regionsum_simple
+        WHERE regionid = :primary
+        AND settlementdate       >= DATE_TRUNC('hour', NOW() - CAST(:interval AS Interval) + INTERVAL '5 min')
+        ORDER BY settlementdate",
+      'data_params' => [
+        'interval' => ['pattern' => '/^(?:([1-7])(days?)|([12]?[0-9])(hours?))$/', 'replacement' => '$1$3 $2$4', 'default' => '2 days'],
+      ],
+      'string_params' => [],
+      'data_y_max' => ['fields' => ['dispatchablegeneration','demand_and_nonschedgen'], 'multiplier' => 1.0],
+      'settings' => [
+        'colours' => ['red', 'blue', 'orange', 'yellowgreen', 'olive', 'purple', 'purple'],
+        'line_dash' => ['0',    '0',      '0',           '0',     '0',      '0',      '0'],
+        'line_stroke_width' => [2,2,        2,             1,       1,        2,        2],
+        'graph_title' => 'Simplified {primary} Dispatch Regional Summary',
+        'label' => [[$graphWidth/2, 38, "Dispatch values are what was supposed to happen in the next 5 minutes, not what happened in hindsight", 'font_size' => 8]],
+        'legend_entries' => [
+          'Operational Demand', 'Dispatched Generation', 'Dispatched Load w/o BDU',
+          'Solar','Wind',
+          'BDU Gen/Load',null
+        ],
+        'structure' => [
+          'key' => 'settlementdate',
+          'value' => [
+            'demand_and_nonschedgen', 'dispatchablegeneration', 'dispatchableload',
+            'ss_solar_clearedmw', 'ss_wind_clearedmw',
+            'bdu_clearedmw_gen', 'bdu_clearedmw_load'
+          ]
+        ]
+      ]
+    ],
     'dispatch_regionsum' => [
       'type' => 'MultiLineGraph',
       'identifier_sql' => "SELECT regionid FROM public.dispatch_regionsum WHERE regionid = :primary LIMIT 1",
@@ -124,14 +159,15 @@ $definitions = [
         'label' => [[$graphWidth/2, 44, "Dispatch values are what was supposed to happen in the next 5 minutes, not what happened in hindsight\nCoal, Gas, Hydro is SCADA data and doesn't consider powerline losses, hence a 0.9 multiplier, hence an estimate (see TAS1)", 'font_size' => 8]],
         'legend_entries' => [
           'Market Demand', 'Operational Demand', 'Reserve Generation', 'Dispatched Generation', 'Available Load w/o BDU', 'Dispatched Load w/o BDU',
-          null,null, 'Solar+Wind+(Hydro*0.9)',null,null,null, 'Coal + Gas(Pipeline) *0.9', 'WDR Dispatched', 'BDU Min/Max', 'BDU Min/Max', 'BDU Gen/Load',null
+          null,null, 'Solar+Wind+(Hydro*0.9)',null,null,null, 'Coal + Gas(Pipeline) *0.9',
+          'WDR Dispatched', 'BDU Min/Max', 'BDU Min/Max', 'BDU Gen/Load',null
         ],
         'structure' => [
           'key' => 'settlementdate',
           'value' => [
             'totaldemand', 'demand_and_nonschedgen', 'remaininggeneration', 'dispatchablegeneration', 'availableload', 'dispatchableload',
-            'ss_solar_uigf', 'ss_wind_uigf', 'renwable_cleared', 'ss_solar_clearedmw', 'ss_wind_clearedmw', 'hydro',
-            'coal_gas', 'wdr_dispatched', 'bdu_max_load', 'bdu_max_gen', 'bdu_clearedmw_gen', 'bdu_clearedmw_load'
+            'ss_solar_uigf', 'ss_wind_uigf', 'renwable_cleared', 'ss_solar_clearedmw', 'ss_wind_clearedmw', 'hydro', 'coal_gas',
+            'wdr_dispatched', 'bdu_max_load', 'bdu_max_gen', 'bdu_clearedmw_gen', 'bdu_clearedmw_load'
           ]
         ]
       ]
@@ -379,6 +415,11 @@ if (isset($template['data_y_max'])) {
   if (isset($data_y_max['multiplier']))
     $max = $max * $data_y_max['multiplier'];
   $settings['axis_max_v'] = $max;
+}
+
+// Debug of values sent to graph
+if (false && $_SERVER['SERVER_NAME'] != 'nemview.hgn.id.au') {
+  var_dump($data);
 }
 
 // Set up the graph
