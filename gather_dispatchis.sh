@@ -24,6 +24,7 @@ if [ -f $logfile ]; then
 fi
 
 # Set the environment variables
+START_EPOCH=$(date +%s)
 working_dir=/usr/local/lsws/social-japan.bnr.la/tmp
 
 # Collect the filenames to download
@@ -44,7 +45,14 @@ rm $working_dir/PUBLIC_DISPATCHIS_* -f
 for filename in $filenames
 do
 	# Download the file and unzip it, producing a CSV
-	wget -O $working_dir/$filename.zip http://nemweb.com.au/Reports/CURRENT/DispatchIS_Reports/$filename.zip
+	# Retry on wget error in case AEMO has a server missing files again
+	COUNT=10
+	while [ $COUNT -gt 0 ]; do
+		if wget -O $working_dir/$filename.zip http://nemweb.com.au/Reports/CURRENT/DispatchIS_Reports/$filename.zip; then
+			break
+		fi
+		COUNT=$((COUNT - 1))
+	done
 	unzip $working_dir/$filename.zip -d $working_dir
 
 	## DISPATCH_REGIONSUM table
@@ -98,7 +106,15 @@ EOF
 	rm $working_dir/$filename.final.CSV -f
 
 	# Sleep for 1 second to avoid overloading the server
-	sleep 1
+	#sleep 1
+
+	# If 4 minutes have passed since script started, cancel the loop
+  NOW_EPOCH=$(date +%s)
+  ELAPSED=$((NOW_EPOCH - START_EPOCH))
+  if (( ELAPSED >= 240 )); then
+    echo "Reached 4 minutes. Exiting loop."
+    break
+  fi
 done
 
 # Update table hn_constraints with any new constraintid in the dispatch_constraint table
