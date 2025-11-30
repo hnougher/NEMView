@@ -242,6 +242,33 @@ $definitions = [
         'line_dash' => [null,null,null,null,null,null,null,null,null,null,2,2,2,2,2,2,2,2,2,2,null,null,null,null,null,null,null,null,null,null,1,1,1,1,1,1,1,1,1,1]
       ]
     ],
+
+    'rooftop_pv_actual' => [
+      'type' => 'MultiLineGraph',
+      'identifier_sql' => "SELECT regionid FROM public.rooftop_pv_actual WHERE regionid = :primary LIMIT 1",
+      'identifier_params' => [],
+      'data_sql' => "SELECT floor(extract(epoch from interval_datetime)) interval_datetime
+        , pvm.power pv_measurement
+        , pvs.power pv_satellite
+        FROM (SELECT * FROM public.rooftop_pv_actual WHERE type = 'MEASUREMENT') pvm
+          LEFT JOIN (SELECT * FROM public.rooftop_pv_actual WHERE type = 'SATELLITE') pvs
+            USING(interval_datetime,regionid)
+        WHERE regionid = :primary
+          AND interval_datetime >= DATE_TRUNC('hour', NOW() - CAST(:interval AS Interval) + INTERVAL '5 min')
+        ORDER BY interval_datetime",
+      'data_params' => [
+        'interval' => ['pattern' => '/^(?:([1-7])(days?)|([12]?[0-9])(hours?))$/', 'replacement' => '$1$3 $2$4', 'default' => '2 day'],
+      ],
+      'string_params' => [],
+      'settings' => [
+        'graph_title' => '{primary} Rooftop PV',
+        'legend_entries' => ['Type Measurement', 'Type Satellite'],
+        'structure' => [
+          'key' => 'interval_datetime',
+          'value' => ['pv_measurement', 'pv_satellite']
+        ]
+      ]
+    ],
   ]
 ];
 

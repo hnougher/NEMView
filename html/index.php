@@ -111,3 +111,11 @@ foreach ($data as $row) {
 }
 ?>
 </table>
+
+<h3>Rooftop PV</h3>
+A graph of the Rooftop PV tables.<br>
+Actual (<?php
+$regions = array('QLD1','NSW1','VIC1','SA1','TAS1');
+foreach ($regions as $region)
+  printf('<a href="/graph/rooftop_pv_actual/%s">%s</a> ', $region, $region);
+?>)<br>
