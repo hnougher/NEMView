@@ -52,6 +52,7 @@ do
 			break
 		fi
 		COUNT=$((COUNT - 1))
+		sleep 1
 	done
 	unzip $working_dir/$filename.zip -d $working_dir
 
@@ -106,7 +107,7 @@ EOF
 	rm $working_dir/$filename.final.CSV -f
 
 	# Sleep for 1 second to avoid overloading the server
-	#sleep 1
+	sleep 1
 
 	# If 4 minutes have passed since script started, cancel the loop
   NOW_EPOCH=$(date +%s)
