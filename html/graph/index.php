@@ -88,11 +88,12 @@ $definitions = [
         WHERE constraintid = :primary AND settlementdate >= NOW() - CAST(:interval AS Interval)
         ORDER BY settlementdate",
       'data_params' => [
-        'interval' => ['pattern' => '/^(?:([1-7])(days?)|([12]?[0-9])(hours?))$/', 'replacement' => '$1$3 $2$4', 'default' => '1 day'],
+        'interval' => ['pattern' => '/^(?:([1-7])(days?)|([12]?[0-9])(hours?))$/', 'replacement' => '$1$3 $2$4', 'default' => '2 day'],
       ],
       'string_params' => [],
       'settings' => [
         'graph_title' => '{primary} Dispatch Constraint',
+        'label' => [[$graphWidth/2, 38, "Dispatch Constraint will only have values when they are active, and otherwise has missing graph points.", 'font_size' => 8]],
         'legend_entries' => ['LHS', 'RHS'],
         'structure' => [
           'key' => 'settlementdate',
