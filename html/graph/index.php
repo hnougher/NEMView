@@ -156,7 +156,7 @@ $definitions = [
       'string_params' => [],
       'data_x_minmax' => ['field' => 'settlementdate'],
       'data_y_max' => ['startat' => 0, 'fields' => ['underlying_demand','dispatchablegeneration','demand_and_nonschedgen']],
-      'data_y_min' => ['startat' => 0, 'fields' => ['dispatchableload','bdu_clearedmw_load']],
+      'data_y_min' => ['startat' => 0, 'fields' => ['totaldemand','dispatchableload','bdu_clearedmw_load']],
       'settings' => [
         'colours' => ['darkred','red','red', 'blue', 'blue', 'orange', 'orange',  'yellowgreen', 'olive', 'green', 'yellowgreen', 'olive', 'mediumaquamarine', 'brown', 'magenta', 'purple', 'purple', 'purple', 'purple'],
         'line_dash' => ['1,5',    '1',  '0',    '1',    '0',      '1',      '0',            '1',     '1',     '0',           '0',     '0',                '0',     '0',       '0',      '1',      '1',      '0',      '0'],
