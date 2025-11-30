@@ -85,7 +85,8 @@ $definitions = [
         , lhs
         , rhs
         FROM public.dispatch_constraint
-        WHERE constraintid = :primary AND settlementdate >= NOW() - CAST(:interval AS Interval)
+        WHERE constraintid = :primary
+          AND settlementdate >= DATE_TRUNC('hour', NOW() - CAST(:interval AS Interval) + INTERVAL '5 min')
         ORDER BY settlementdate",
       'data_params' => [
         'interval' => ['pattern' => '/^(?:([1-7])(days?)|([12]?[0-9])(hours?))$/', 'replacement' => '$1$3 $2$4', 'default' => '2 day'],
