@@ -3,6 +3,6 @@
 /html/svggraph/*
 /logs
 /tmp
-/*.log
-/*.log.*
+*.log
+*.log.*
 *.old

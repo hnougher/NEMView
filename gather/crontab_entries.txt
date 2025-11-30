@@ -1,0 +1,5 @@
+These entries are added to the crontab.
+
+1-59/5 * * * *  /usr/local/lsws/social-japan.bnr.la/gather/dispatchis.sh >> /usr/local/lsws/social-japan.bnr.la/gather/dispatchis.log 2>&1
+1-59/5 * * * *  /usr/local/lsws/social-japan.bnr.la/gather/dispatchscada.sh >> /usr/local/lsws/social-japan.bnr.la/gather/dispatchscada.log 2>&1
+4 0 * * *       /usr/local/lsws/social-japan.bnr.la/gather/co2eii.sh >> /usr/local/lsws/social-japan.bnr.la/gather/co2eii.log 2>&1

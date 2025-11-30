@@ -5,7 +5,7 @@
 echo '-----------------------'
 
 # Rotate the log file if larger than 1MB
-logfile=/usr/local/lsws/social-japan.bnr.la/gather_co2eii.log
+logfile=/usr/local/lsws/social-japan.bnr.la/gather/co2eii.log
 if [ -f $logfile ]; then
 	if [ $(stat -c%s $logfile) -gt 1048576 ]; then
 		echo 'Rotating log file' + $(stat -c%s $logfile)
