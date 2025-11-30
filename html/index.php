@@ -12,7 +12,18 @@ if ($_SERVER['SERVER_NAME'] == 'nemview.hgn.id.au') {
   header('X-LiteSpeed-Cache-Control: no-cache, no-store');
   echo '<!-- Not cached -->';
 }
+
+// Connect to the database
+try {
+  $sqlStart = -hrtime(true);
+	$pg = new PDO('pgsql:host=10.240.0.165;port=5432;dbname=nem', 'nem_worker', 'hgknIOGNUyiutbui7^%g', [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_TIMEOUT => 5]);
+} catch (PDOException $e) {
+	die('Connection failed: ' . $e->getMessage());
+}
 ?>
+
+This is a hobby project.<br>
+Obvious bugs and contributions welcome at <a href="https://github.com/hnougher/NEMView">https://github.com/hnougher/NEMView</a>.<br>
 
 <h2>Maps (trial, incomplete)</h2>
 <a href="/map">Map</a> (<?php
@@ -30,11 +41,13 @@ $regions = array('NSW1', 'QLD1', 'SA1', 'TAS1', 'VIC1');
 foreach ($regions as $region)
   printf('<a href="/graph/dispatch_regionsum/%s">%s</a> ', $region, $region);
 ?>)<br>
+Note: impacted by late SCADA data.<br>
+<br>
 
 Simplified (<?php
 foreach ($regions as $region)
   printf('<a href="/graph/dispatch_regionsum_simple/%s">%s</a> ', $region, $region);
-?>)
+?>)<br>
 
 <h3>Dispatch SCADA</h3>
 <?php
@@ -72,4 +85,29 @@ Notes for 'es' parameter. Bitwise addition of energy source types:<br>
 <h3>Dispatch Constraint</h3>
 This is a template only.<br>
 Replace the last part of the URL with the constraint name.<br>
-<a href="/graph/dispatch_constraint/N&gt;&gt;NIL_33_34">Dispatch Contraint N&gt;&gt;NIL_33_34</a>
+eg: <a href="/graph/dispatch_constraint/N&gt;&gt;NIL_33_34">Dispatch Contraint N&gt;&gt;NIL_33_34</a> (33&34 between Bayswater and Liddell)<br>
+<br>
+Top constrainting in the last 2 days.<br>
+<table style="border-collapse: collapse; border-width: 1px">
+<tr><th>Count</th><th>Constraint</th><th>Type</th></tr>
+<?php
+$sql = <<<SQLQ
+SELECT constraintid, COUNT(*) AS event_count
+    , (SELECT type FROM hn_constraints hc WHERE hc.constraint_id = dc.constraintid LIMIT 1) AS constraint_type
+FROM dispatch_constraint dc
+WHERE settlementdate >= NOW() - INTERVAL '2 days'
+    AND marginvalue <> 0
+    AND constraintid !~ '^(#|DATASNAP_|DSNAP_|F_)'
+GROUP BY constraintid
+ORDER BY event_count DESC
+LIMIT 20
+SQLQ;
+$stmt = $pg->prepare($sql);
+$stmt->execute();
+$data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+foreach ($data as $row) {
+  printf('<tr><td>%s</td><td><a href="/graph/dispatch_constraint/%s">%s</a></td><td>%s</td></tr>', $row['event_count'], $row['constraintid'], $row['constraintid'], $row['constraint_type']);
+}
+?>
+</table>
