@@ -158,24 +158,24 @@ $definitions = [
       'data_y_max' => ['startat' => 0, 'fields' => ['underlying_demand','dispatchablegeneration','demand_and_nonschedgen']],
       'data_y_min' => ['startat' => 0, 'fields' => ['totaldemand','dispatchableload','bdu_clearedmw_load']],
       'settings' => [
-        'colours' => ['darkred','red','red', 'blue', 'blue', 'orange', 'orange',  'yellowgreen', 'olive', 'green', 'yellowgreen', 'olive', 'mediumaquamarine', 'brown', 'magenta', 'purple', 'purple', 'purple', 'purple'],
-        'line_dash' => ['1,5',    '1',  '0',    '1',    '0',      '1',      '0',            '1',     '1',     '0',           '0',     '0',                '0',     '0',       '0',      '1',      '1',      '0',      '0'],
-        'line_stroke_width' => [1,  1,    2,     1,       2,        1,        2,              1,       1,       2,             1,       1,                  1,       2,         2,        1,        1,        2,        2],
+        'colours' => ['darkred','red','red', 'blue', 'blue', 'orange', 'orange', 'yellow', 'yellowgreen', 'yellowgreen', 'olive', 'olive', 'mediumaquamarine', 'green', 'brown', 'magenta', 'purple', 'purple', 'purple', 'purple'],
+        'line_dash' => ['1,5',    '1',  '0',    '1',    '0',      '1',      '0',      '1',           '1',           '0',     '1',     '0',                '0',     '0',     '0',       '0',      '0',      '0',      '1',      '1'],
+        'line_stroke_width' => [1,  1,    2,     1,       2,        1,        2,        1,             1,             1,       1,       1,                  1,       2,       2,         2,        2,        2,        1,        1],
         'graph_title' => '{primary} Dispatch Regional Summary',
         'label' => [[$graphWidth/2, 44, "Dispatch values are what was supposed to happen in the next 5 minutes, not what happened in hindsight\nCoal, Gas, Hydro is SCADA data and doesn't consider powerline losses, hence a 0.9 multiplier, hence an estimate (see TAS1)", 'font_size' => 8]],
         'legend_entries' => [
-          'Est. Underlying Demand', 'Market Demand', 'Operational Demand',
-          'Reserve Generation', 'Dispatched Generation', 'Available Load w/o BDU', 'Dispatched Load w/o BDU',
-          null,null, 'Solar+Wind+(Hydro*0.9)',null,null,null, '(Coal+Gas(Pipeline))*0.9',
-          'WDR Dispatched', 'BDU Min/Max', 'BDU Min/Max', 'BDU Gen/Load',null
+          'Est. Underlying Demand','Market Demand','Operational Demand',
+          'Reserve Generation','Dispatched Generation',null,'Dispatched Load w/o BDU',
+          'Est. Small/Roof Solar',null,null,null,null,null,'Solar+Wind+(Hydro*0.9)',
+          '(Coal+Gas(Pipeline))*0.9',null,'BDU Gen/Load',null,null,'[Dashed are Min or Max]'
         ],
         'structure' => [
           'key' => 'settlementdate',
           'value' => [
             'underlying_demand', 'totaldemand', 'demand_and_nonschedgen',
             'remaininggeneration', 'dispatchablegeneration', 'availableload', 'dispatchableload',
-            'ss_solar_uigf', 'ss_wind_uigf', 'renwable_cleared', 'ss_solar_clearedmw', 'ss_wind_clearedmw', 'hydro', 'coal_gas',
-            'wdr_dispatched', 'bdu_max_load', 'bdu_max_gen', 'bdu_clearedmw_gen', 'bdu_clearedmw_load'
+            'rooftop_estimate','ss_solar_uigf', 'ss_solar_clearedmw', 'ss_wind_uigf', 'ss_wind_clearedmw', 'hydro', 'renwable_cleared',
+            'coal_gas', 'wdr_dispatched', 'bdu_clearedmw_gen', 'bdu_clearedmw_load', 'bdu_max_load', 'bdu_max_gen'
           ]
         ]
       ]
