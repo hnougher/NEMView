@@ -158,24 +158,35 @@ $definitions = [
       'data_y_max' => ['startat' => 0, 'fields' => ['underlying_demand','dispatchablegeneration','demand_and_nonschedgen']],
       'data_y_min' => ['startat' => 0, 'fields' => ['totaldemand','dispatchableload','bdu_clearedmw_load']],
       'settings' => [
-        'colours' => ['darkred','red','red', 'blue', 'blue', 'orange', 'orange', 'yellow', 'yellowgreen', 'yellowgreen', 'olive', 'olive', 'mediumaquamarine', 'green', 'brown', 'magenta', 'purple', 'purple', 'purple', 'purple'],
-        'line_dash' => ['1,5',    '1',  '0',    '1',    '0',      '1',      '0',      '1',           '1',           '0',     '1',     '0',                '0',     '0',     '0',       '0',      '0',      '0',      '1',      '1'],
-        'line_stroke_width' => [1,  1,    2,     1,       2,        1,        2,        1,             1,             1,       1,       1,                  1,       2,       2,         2,        2,        2,        1,        1],
+        'colours' => ['purple', 'purple', 'purple', 'purple', 'orange', 'orange', 'yellow', 'darkred','red','red', 'blue', 'blue', 'yellowgreen', 'yellowgreen', 'olive', 'olive', 'mediumaquamarine', 'green', 'brown', 'magenta'],
+        'line_dash' => [  '0,1',   '0,1',      '1',      '1',      '1',    '0,1',    '0,1',     '1,5',  '1',  '0',    '1',    '0',            '1',           '0',     '1',     '0',                '0',     '0',     '0',       '0'],
+        'line_stroke_width' => [2,     2,        1,        1,        1,        2,        0,         1,    1,    2,     1,       2,              1,             1,       1,       1,                  1,       2,       2,         2],
+        'fill_under' => [     1,       1,        0,        0,        0,        1,        1,         0,    0,    0,     0,       0,              0,             0,       0,       0,                  0,       0,       0,         0],
+        'fill_opacity' => [ 0.5,     0.5,        0,        0,        0,      0.5,      0.2,         0,    0,    0,     0,       0,              0,             0,       0,       0,                  0,       0,       0,         0],
         'graph_title' => '{primary} Dispatch Regional Summary',
         'label' => [[$graphWidth/2, 44, "Dispatch values are what was supposed to happen in the next 5 minutes, not what happened in hindsight\nCoal, Gas, Hydro is SCADA data and doesn't consider powerline losses, hence a 0.9 multiplier, hence an estimate (see TAS1)", 'font_size' => 8]],
         'legend_entries' => [
+          'BDU Gen/Load',null,null,'[Dashed are Min or Max]',null,'Dispatched Load w/o BDU','Est. Small/Roof Solar',
           'Est. Underlying Demand','Market Demand','Operational Demand',
-          'Reserve Generation','Dispatched Generation',null,'Dispatched Load w/o BDU',
-          'Est. Small/Roof Solar',null,null,null,null,null,'Solar+Wind+(Hydro*0.9)',
-          '(Coal+Gas(Pipeline))*0.9',null,'BDU Gen/Load',null,null,'[Dashed are Min or Max]'
+          'Reserve Generation','Dispatched Generation',
+          null,null,null,null,null,'Solar+Wind+(Hydro*0.9)',
+          '(Coal+Gas(Pipeline))*0.9',null
+        ],
+        'legend_order' => [
+          7,8,9,
+          10,11,
+          12,13,14,15,16,17,
+          18,19,
+          6,4,5,0,1,2,3,
         ],
         'structure' => [
           'key' => 'settlementdate',
           'value' => [
+            'bdu_clearedmw_gen', 'bdu_clearedmw_load', 'bdu_max_load', 'bdu_max_gen', 'availableload', 'dispatchableload', 'rooftop_estimate',
             'underlying_demand', 'totaldemand', 'demand_and_nonschedgen',
-            'remaininggeneration', 'dispatchablegeneration', 'availableload', 'dispatchableload',
-            'rooftop_estimate','ss_solar_uigf', 'ss_solar_clearedmw', 'ss_wind_uigf', 'ss_wind_clearedmw', 'hydro', 'renwable_cleared',
-            'coal_gas', 'wdr_dispatched', 'bdu_clearedmw_gen', 'bdu_clearedmw_load', 'bdu_max_load', 'bdu_max_gen'
+            'remaininggeneration', 'dispatchablegeneration',
+            'ss_solar_uigf', 'ss_solar_clearedmw', 'ss_wind_uigf', 'ss_wind_clearedmw', 'hydro', 'renwable_cleared',
+            'coal_gas', 'wdr_dispatched'
           ]
         ]
       ]
