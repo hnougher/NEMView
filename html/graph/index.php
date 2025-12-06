@@ -162,7 +162,7 @@ $definitions = [
         'line_stroke_width' => [2,     2,        1,        1,        1,        2,        0,         1,    1,    2,     1,       2,              1,             1,       1,       1,                  1,       2,       2,         2],
         'fill_under' => [     1,       1,        0,        0,        0,        1,        1,         0,    0,    0,     0,       0,              0,             0,       0,       0,                  0,       0,       0,         0],
         'fill_opacity' => [ 0.5,     0.5,        0,        0,        0,      0.5,      0.2,         0,    0,    0,     0,       0,              0,             0,       0,       0,                  0,       0,       0,         0],
-        'graph_title' => '{primary} Dispatch Regional Summary',
+        'graph_title' => '{primary} Dispatch Regional Summary + P5 Forecast',
         'label' => [[$graphWidth/2, 44, "Dispatch values are what was supposed to happen in the next 5 minutes, not what happened in hindsight\nCoal, Gas, Hydro is SCADA data and doesn't consider powerline losses, hence a 0.9 multiplier, hence an estimate (see TAS1)", 'font_size' => 8]],
         'legend_entries' => [
           'BDU Gen/Load',null,null,'[Dashed are Min or Max]',null,'Dispatched Load w/o BDU','Est. Small/Roof Solar',
@@ -199,7 +199,7 @@ $definitions = [
         AND settlementdate       >= DATE_TRUNC('hour', NOW() - CAST(:interval AS Interval) + INTERVAL '5 min')
         ORDER BY settlementdate",
       'settings' => [
-        'graph_title' => 'NEM Dispatch Summary',
+        'graph_title' => 'NEM Dispatch Summary + P5 Forecast',
       ]
     ],
 
