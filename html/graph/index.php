@@ -163,7 +163,10 @@ $definitions = [
         'fill_under' => [     1,       1,        0,        0,        0,        1,        1,         0,    0,    0,     0,       0,              0,             0,       0,       0,                  0,       0,       0,         0],
         'fill_opacity' => [ 0.5,     0.5,        0,        0,        0,      0.5,      0.2,         0,    0,    0,     0,       0,              0,             0,       0,       0,                  0,       0,       0,         0],
         'graph_title' => '{primary} Dispatch Regional Summary + P5 Forecast',
-        'label' => [[$graphWidth/2, 44, "Dispatch values are what was supposed to happen in the next 5 minutes, not what happened in hindsight\nCoal, Gas, Hydro is SCADA data and doesn't consider powerline losses, hence a 0.9 multiplier, hence an estimate (see TAS1)", 'font_size' => 8]],
+        'label' => [
+          [$graphWidth/2, 44, "Dispatch values are what was supposed to happen in the next 5 minutes, not what happened in hindsight\nCoal, Gas, Hydro is SCADA data and doesn't consider powerline losses, hence a 0.9 multiplier, hence an estimate (see TAS1)", 'font_size'=>8],
+          ['g'.date('c'), 'g0', "Now", 'font_size'=>8, 'type'=>'bubble', 'round'=>10, 'tail_end'=>'taper', 'tail_width'=>1, 'tail_length'=>'200', 'position'=>'0 -220', 'padding'=>2, 'shadow_opacity'=>0]
+        ],
         'legend_entries' => [
           'BDU Gen/Load',null,null,'[Dashed are Min or Max]',null,'Dispatched Load w/o BDU','Est. Small/Roof Solar',
           'Est. Underlying Demand','Market Demand','Operational Demand',
