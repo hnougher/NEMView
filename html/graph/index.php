@@ -148,7 +148,6 @@ $definitions = [
         FROM public.graph_dispatch_regionsum
         WHERE regionid = :primary
         AND settlementdate       >= DATE_TRUNC('hour', NOW() - CAST(:interval AS Interval) + INTERVAL '5 min')
-        AND settlementdate_inner >= DATE_TRUNC('hour', NOW() - CAST(:interval AS Interval) + INTERVAL '5 min')
         ORDER BY settlementdate",
       'data_params' => [
         'interval' => ['pattern' => '/^(?:([1-7])(days?)|([12]?[0-9])(hours?))$/', 'replacement' => '$1$3 $2$4', 'default' => '2 days'],
@@ -198,7 +197,6 @@ $definitions = [
       'data_sql' => "SELECT * FROM public.graph_dispatch_nemsum
         WHERE :primary = 'NEM'
         AND settlementdate       >= DATE_TRUNC('hour', NOW() - CAST(:interval AS Interval) + INTERVAL '5 min')
-        AND settlementdate_inner >= DATE_TRUNC('hour', NOW() - CAST(:interval AS Interval) + INTERVAL '5 min')
         ORDER BY settlementdate",
       'settings' => [
         'graph_title' => 'NEM Dispatch Summary',
