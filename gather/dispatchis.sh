@@ -27,6 +27,9 @@ fi
 START_EPOCH=$(date +%s)
 working_dir=/usr/local/lsws/social-japan.bnr.la/tmp
 
+# Sleep for 20 seconds to give AEMO more time to update their website
+sleep 20
+
 # Collect the filenames to download
 previous=$(psql -h 10.240.0.165 -U nem_worker -d nem -t -c "SET TIME ZONE '+10';SELECT to_char(MAX(settlementdate),'YYYYMMDDHH24MI') FROM dispatch_constraint;")
 previous=${previous#*$'\n'}
