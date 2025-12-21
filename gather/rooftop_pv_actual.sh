@@ -3,6 +3,13 @@
 # Once downloaded the file needs to be unzipped, then processed since the file is a few CSV files concatenated together.
 # The processed data is then uploaded to the PostgreSQL database using the COPY command.
 
+
+## Useful cleanup SQL when things have gone wrong
+#-- Find newest date in table
+#-- SELECT MAX(interval_datetime), to_char(MAX(interval_datetime),'YYYYMMDDHH24MI') FROM rooftop_pv_actual WHERE type = 'MEASUREMENT';
+#-- SELECT MAX(interval_datetime), to_char(MAX(interval_datetime),'YYYYMMDDHH24MI') FROM rooftop_pv_actual WHERE type = 'SATELLITE';
+#-- Be carful of multiple gatherers running at the same time
+#-- DELETE FROM rooftop_pv_actual WHERE interval_datetime >= '2095-12-21 11:00:00+10';
 echo '-----------------------'
 
 # Rotate the log file if larger than 1MB

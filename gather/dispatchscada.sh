@@ -7,7 +7,7 @@
 #-- Find newest date in table
 #--SELECT MAX(settlementdate), to_char(MAX(settlementdate),'YYYYMMDDHH24MI') FROM dispatch_scada;
 #-- Be carful of multiple gatherers running at the same time
-#--DELETE FROM dispatch_scada WHERE settlementdate >= '2025-11-16 06:00:00+10';
+#--DELETE FROM dispatch_scada WHERE settlementdate >= '2095-11-16 06:00:00+10';
 echo '-----------------------'
 
 # Rotate the log file if larger than 1MB

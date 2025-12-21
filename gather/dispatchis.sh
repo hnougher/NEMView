@@ -8,8 +8,8 @@
 #--SELECT MAX(settlementdate), to_char(MAX(settlementdate),'YYYYMMDDHH24MI') FROM dispatch_constraint;
 #--SELECT MAX(settlementdate), to_char(MAX(settlementdate),'YYYYMMDDHH24MI') FROM dispatch_regionsum;
 #-- Be carful of multiple gatherers running at the same time
-#--DELETE FROM dispatch_constraint WHERE settlementdate >= '2025-07-01 09:55:00+10';
-#--DELETE FROM dispatch_regionsum WHERE settlementdate >= '2025-07-01 09:55:00+10';
+#--DELETE FROM dispatch_constraint WHERE settlementdate >= '2095-07-01 09:55:00+10';
+#--DELETE FROM dispatch_regionsum WHERE settlementdate >= '2095-07-01 09:55:00+10';
 #-- Find duplicates that fill the graph
 #--SELECT settlementdate, count(settlementdate) FROM public.graph_dispatch_regionsum WHERE regionid = 'NSW1' GROUP BY settlementdate HAVING count(settlementdate) > 1
 echo '-----------------------'
