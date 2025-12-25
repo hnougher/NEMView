@@ -45,34 +45,43 @@ $graphWidth = 900;
 $definitions = [
   'global_settings' => [
     'auto_fit' => true,
-    'axis_text_angle_h' => -90,
-    'datetime_keys' => true,
     'datetime_key_format' => 'U',
-    'datetime_text_format' => [
-      'second' => 'H:i:s',
-      'minute' => 'D H:i',
-      'hour' => 'D H:i',
-      'day' => 'M d',
-      'month' => 'Y-m',
-      'year' => 'Y'
-    ],
     'graph_title' => 'Undefined Graph Title',
-    'label_h' => 'NEM Time',
-    'label_v' => 'MW',
-    'legend_autohide' => true,
-    'legend_draggable' => true,
-    'legend_font_size' => 8,
-    'legend_padding_y' => 0,
-    'legend_position' => 'left',
-    'legend_spacing' => -7,
-    'legend_unique_fields' => true,
-    'marker_size' => 0,
-    'marker_type' => 'circle',
     'structured_data' => true,
   ],
   'types' => [
     'MultiLineGraph' => [
-      'settings' => []
+      'settings' => [
+        'axis_text_angle_h' => -90,
+        'datetime_keys' => true,
+        'datetime_text_format' => [
+          'second' => 'H:i:s',
+          'minute' => 'D H:i',
+          'hour' => 'D H:i',
+          'day' => 'M d',
+          'month' => 'Y-m',
+          'year' => 'Y'
+        ],
+        'graph_title' => 'Undefined Multiline Graph Title',
+        'graph_title_space' => 5, # Default 10
+        'graph_subtitle_font_size' => 8,
+        'graph_subtitle_space' => 0,
+        'label_h' => 'NEM Time',
+        'label_v' => 'MW',
+        'legend_autohide' => true,
+        'legend_draggable' => true,
+        'legend_font_size' => 8,
+        'legend_padding_y' => 0,
+        'legend_position' => 'top left',
+        'legend_spacing' => -7,
+        'legend_unique_fields' => true,
+        'marker_size' => 0,
+        'marker_type' => 'circle',
+        'pad_bottom' => -5, # Default 10
+        'pad_left' => -5, # Default 10
+        'pad_right' => 0, # Default 10
+        'pad_top' => 0, # Default 10, no effect with title
+      ]
     ]
   ],
   'templates' => [
@@ -94,7 +103,7 @@ $definitions = [
       'string_params' => [],
       'settings' => [
         'graph_title' => '{primary} Dispatch Constraint',
-        'label' => [[$graphWidth/2, 38, "Dispatch Constraint will only have values when they are active, and otherwise has missing graph points.", 'font_size' => 8]],
+        'label' => [[$graphWidth/2, 32, "Dispatch Constraint will only have values when they are active, and otherwise has missing graph points.", 'font_size' => 8]],
         'legend_entries' => ['LHS', 'RHS'],
         'structure' => [
           'key' => 'settlementdate',
@@ -124,7 +133,7 @@ $definitions = [
         'line_dash' => ['0',    '0',      '0',           '0',     '0',      '0',      '0'],
         'line_stroke_width' => [2,2,        2,             1,       1,        2,        2],
         'graph_title' => 'Simple {primary} Dispatch Regional Summary',
-        'label' => [[$graphWidth/2, 38, "Dispatch values are what was supposed to happen in the next 5 minutes, not what happened in hindsight", 'font_size' => 8]],
+        'label' => [[$graphWidth/2, 32, "Dispatch values are what was supposed to happen in the next 5 minutes, not what happened in hindsight", 'font_size' => 8]],
         'legend_entries' => [
           'Operational Demand', 'Dispatched Generation', 'Dispatched Load w/o BDU',
           'Solar','Wind',
@@ -164,7 +173,7 @@ $definitions = [
         'fill_opacity' => [ 0.5,     0.5,        0,        0,        0,      0.5,      0.2,         0,    0,    0,     0,       0,              0,             0,       0,       0,                  0,       0,       0,         0],
         'graph_title' => '{primary} Dispatch Regional Summary + P5 Forecast',
         'label' => [
-          [$graphWidth/2, 44, "Dispatch values are what was supposed to happen in the next 5 minutes, not what happened in hindsight\nCoal, Gas, Hydro is SCADA data and doesn't consider powerline losses, hence a 0.9 multiplier, hence an estimate (see TAS1)", 'font_size'=>8],
+          [$graphWidth/2, 40, "Dispatch values are what was supposed to happen in the next 5 minutes, not what happened in hindsight\nCoal, Gas and Hydro are SCADA data and doesn't consider powerline losses, hence a 0.9 multiplier, hence an estimate (see TAS1)", 'font_size'=>8],
           ['g'.date('c'), 'g0', "Now", 'font_size'=>8, 'type'=>'bubble', 'round'=>10, 'tail_end'=>'taper', 'tail_width'=>1, 'tail_length'=>'200', 'position'=>'0 -220', 'padding'=>2, 'shadow_opacity'=>0]
         ],
         'legend_entries' => [
@@ -246,7 +255,7 @@ $definitions = [
       'string_params' => [],
       'settings' => [
         'graph_title' => '{primary} Dispatch SCADA',
-        'label' => [[$graphWidth/2, 44, "This will not show generators that are 0 over the visible period.", 'font_size' => 8]],
+        'label' => [[$graphWidth/2, 32, "This will not show generators that are 0 over the visible period.", 'font_size' => 8]],
         'legend_entries_loop' => '#duid#',
         'legend_columns' => 2,
         'legend_spacing' => -12,
