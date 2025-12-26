@@ -43,11 +43,34 @@ require '../svggraph/autoloader.php';
 $graphHeight = 562;
 $graphWidth = 900;
 $definitions = [
-  'global_settings' => [
-    'auto_fit' => true,
-    'datetime_key_format' => 'U',
-    'graph_title' => 'Undefined Graph Title',
-    'structured_data' => true,
+  'global' => [
+    'settings' => [
+      'auto_fit' => true,
+      'datetime_key_format' => 'U',
+      'graph_title' => 'Undefined Graph Title',
+      'structured_data' => true,
+    ],
+    'variants' => [
+      'dark' => [
+        'background' => 'black',
+        'settings' => [
+          'axis_text_colour' => 'white',
+          'back_colour' => 'rgb(15,15,15)',
+          'back_stroke_colour' => 'white',
+          'context_back_colour' => 'black',
+          'context_colour' => 'white',
+          'data_label_colour' => 'white',
+          'graph_title_colour' => 'white',
+          'graph_subtitle_colour' => 'white',
+          'grid_colour' => 'rgb(35,35,35)',
+          'label_colour' => 'white',
+          'legend_back_colour' => 'black',
+          'legend_colour' => 'white',
+          'legend_stroke_colour' => 'white',
+          'legend_title_colour' => 'white',
+        ],
+      ],
+    ],
   ],
   'types' => [
     'MultiLineGraph' => [
@@ -56,8 +79,8 @@ $definitions = [
         'datetime_keys' => true,
         'datetime_text_format' => [
           'second' => 'H:i:s',
-          'minute' => 'D H:i',
-          'hour' => 'D H:i',
+          'minute' => 'D Hi',
+          'hour' => 'D H₀₀',
           'day' => 'M d',
           'month' => 'Y-m',
           'year' => 'Y'
@@ -305,7 +328,12 @@ try {
 // Get the path and split it into its parts
 $path = empty($_SERVER['REDIRECT_URL']) ? $_SERVER['REQUEST_URI'] : $_SERVER['REDIRECT_URL'];
 $path = explode('/', substr($path, 7));
-#print_r($path);
+$graphVariant = 'default';
+if (isset($definitions['global']['variants'][$path[0]])) {
+  $graphVariant = array_shift($path);
+}
+#var_dump($graphRoot, $path);
+#die;
 
 // Check the path has enough parts
 if (count($path) < 2) {
@@ -401,7 +429,11 @@ if (!$identifier) {
 
 // Merge the settings
 $graphType = $template['type'];
-$settings = array_merge($definitions['global_settings'], $definitions['types'][$graphType]['settings'], $template['settings']);
+$settings = $definitions['global']['settings'];
+if ($graphVariant != 'default') {
+  $settings = array_merge($settings, $definitions['global']['variants'][$graphVariant]['settings']);
+}
+$settings = array_merge($settings, $definitions['types'][$graphType]['settings'], $template['settings']);
 
 // Replace the string parameters
 foreach ($string_params as $key => $value) {
@@ -504,12 +536,17 @@ $graph = new Goat1000\SVGGraph\SVGGraph($graphWidth, $graphHeight, $settings);
 $graph->values($data);
 if (isset($settings['colours']))
   $graph->colours($settings['colours']);
-$out = $graph->fetch($graphType, true, false);
+$out = $graph->fetch($graphType, false, false);
 
 // Output the graph and processing time
 header('Content-Type: image/svg+xml');
 $sqlTime = round($sqlProcessing / 1e+6);
 $processingTime = round(($startProcessing + hrtime(true) - $sqlProcessing) / 1e+6);
+echo '<?xml version="1.0" encoding="UTF-8" standalone="no"?>';
+/*echo '<html>';
+if ($graphVariant != 'default') {
+  printf('<head><style type="text/css">html{background:%s}</style></head>', $definitions['global']['variants'][$graphVariant]['background']);
+}*/
 echo substr($out, 0, -7);
 printf('<title>%s</title>', $settings['graph_title']);
 printf('<text x="%u" y="%u" font-size="7" fill="#888">Created by NEMView (https://nemview.hgn.id.au/) using AEMO public data and Goat1000/SVGGraph on a AU$5/month PHP+PG+OLS server.</text>', 5, $graphHeight-5);
