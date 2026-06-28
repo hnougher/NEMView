@@ -31,8 +31,8 @@ SELECT set_chunk_time_interval('dispatch_scada_summary', INTERVAL '7 days');
 ALTER MATERIALIZED VIEW dispatch_scada_summary set (timescaledb.materialized_only = false);
 SELECT add_retention_policy('dispatch_scada_summary', INTERVAL '6 months');
 SELECT add_continuous_aggregate_policy('dispatch_scada_summary',
-  start_offset => INTERVAL '1 h',
-  end_offset => INTERVAL '15 min',
+  start_offset => INTERVAL '03:00:00',
+  end_offset => INTERVAL '00:10:00',
   schedule_interval => INTERVAL '5 min');
 
 -- Update the entire table

@@ -1,0 +1,27 @@
+CREATE OR REPLACE VIEW public.graph_dispatch_nemsum AS
+SELECT graph_dispatch_regionsum.settlementdate,
+    graph_dispatch_regionsum.settlementdate_inner,
+    sum(graph_dispatch_regionsum.totaldemand) AS totaldemand,
+    sum(graph_dispatch_regionsum.demand_and_nonschedgen) AS demand_and_nonschedgen,
+    sum(graph_dispatch_regionsum.remaininggeneration) AS remaininggeneration,
+    sum(graph_dispatch_regionsum.dispatchablegeneration) AS dispatchablegeneration,
+    sum(graph_dispatch_regionsum.availableload) AS availableload,
+    sum(graph_dispatch_regionsum.dispatchableload) AS dispatchableload,
+    sum(graph_dispatch_regionsum.ss_solar_uigf) AS ss_solar_uigf,
+    sum(graph_dispatch_regionsum.ss_wind_uigf) AS ss_wind_uigf,
+    sum(graph_dispatch_regionsum.renwable_cleared) AS renwable_cleared,
+    sum(graph_dispatch_regionsum.ss_solar_clearedmw) AS ss_solar_clearedmw,
+    sum(graph_dispatch_regionsum.ss_wind_clearedmw) AS ss_wind_clearedmw,
+    sum(graph_dispatch_regionsum.hydro) AS hydro,
+    sum(graph_dispatch_regionsum.coal_gas) AS coal_gas,
+    sum(graph_dispatch_regionsum.wdr_dispatched) AS wdr_dispatched,
+    sum(graph_dispatch_regionsum.bdu_max_load) AS bdu_max_load,
+    sum(graph_dispatch_regionsum.bdu_max_gen) AS bdu_max_gen,
+    sum(graph_dispatch_regionsum.bdu_clearedmw_gen) AS bdu_clearedmw_gen,
+    sum(graph_dispatch_regionsum.bdu_clearedmw_load) AS bdu_clearedmw_load,
+    sum(graph_dispatch_regionsum.bdu_clearedmw) AS bdu_clearedmw,
+    sum(graph_dispatch_regionsum.rooftop_estimate) AS rooftop_estimate,
+    sum(graph_dispatch_regionsum.underlying_demand) AS underlying_demand
+FROM graph_dispatch_regionsum
+GROUP BY graph_dispatch_regionsum.settlementdate,
+    graph_dispatch_regionsum.settlementdate_inner;

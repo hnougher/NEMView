@@ -1,0 +1,20 @@
+CREATE OR REPLACE VIEW public.graph_dispatch_regionsum_simple AS
+SELECT rs.settlementdate,
+    rs.regionid,
+    rs.totaldemand,
+    rs.demand_and_nonschedgen,
+    rs.availablegeneration - rs.dispatchablegeneration AS remaininggeneration,
+    rs.dispatchablegeneration,
+    (- rs.availableload) + rs.bdu_min_avail AS availableload,
+    (- rs.dispatchableload) + rs.bdu_clearedmw_load AS dispatchableload,
+    rs.ss_solar_uigf,
+    rs.ss_wind_uigf,
+    rs.ss_solar_clearedmw,
+    rs.ss_wind_clearedmw,
+    rs.wdr_dispatched,
+    - rs.bdu_min_avail AS bdu_max_load,
+    rs.bdu_max_avail AS bdu_max_gen,
+    rs.bdu_clearedmw_gen,
+    - rs.bdu_clearedmw_load AS bdu_clearedmw_load,
+    rs.bdu_clearedmw_gen - rs.bdu_clearedmw_load AS bdu_clearedmw
+FROM dispatch_regionsum rs;
