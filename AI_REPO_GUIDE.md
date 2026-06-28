@@ -17,6 +17,9 @@ It is acceptable to reference internal IPs and the public domain `nemview.hgn.id
 - `logs/`: Runtime logs.
 - `sql_defs/`: Exported SQL DDL used to define database objects.
   - `sql_defs/tables/`: `CREATE TABLE ...` exports for tables.
+  - `sql_defs/functions/`: `CREATE OR REPLACE FUNCTION ...` exports for public SQL/plpgsql functions.
+  - `sql_defs/triggers/`: `CREATE OR REPLACE FUNCTION ...` exports for trigger functions (i.e., functions with return type `trigger`).
+  - `sql_defs/extensions/`: `CREATE EXTENSION ...` exports for required database extensions.
   - `sql_defs/views/`: `CREATE OR REPLACE VIEW ... AS ...` exports for normal views in schema `public`.
   - `sql_defs/materialized_views/`: `CREATE MATERIALIZED VIEW ... WITH (timescaledb.continuous) AS ...` exports for continuous aggregates.
   - `sql_defs/*` (other files): supporting SQL definitions.
@@ -28,9 +31,14 @@ It is acceptable to reference internal IPs and the public domain `nemview.hgn.id
   - `sql_defs/tables/dispatch_regionsum.sql`  -> table `public.dispatch_regionsum`
   - `sql_defs/views/graph_dispatch_regionsum_simple.sql` -> view `public.graph_dispatch_regionsum_simple`
   - `sql_defs/materialized_views/dispatch_scada_summary.sql` -> materialized view `dispatch_scada_summary`
+  - `sql_defs/functions/hn_duid_energy_source.sql` -> function `public.hn_duid_energy_source`
+  - `sql_defs/triggers/hn_constraints_process.sql` -> trigger function `public.hn_constraints_process`
+  - `sql_defs/extensions/timescaledb.sql` -> extension `timescaledb`
 
 ### Statement header
 - Tables: `CREATE TABLE public.<table_name> ( ... );`
+- Functions: `CREATE OR REPLACE FUNCTION public.<function_name>(...) ... ;`
+- Trigger functions: same DDL form as functions, but the file should live under `sql_defs/triggers/`.
 - Views: `CREATE OR REPLACE VIEW public.<view_name> AS ...;`
 - Continuous aggregates: `CREATE MATERIALIZED VIEW <name> WITH (timescaledb.continuous) AS SELECT ...;`
 
