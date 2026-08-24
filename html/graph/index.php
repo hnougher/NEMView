@@ -176,7 +176,9 @@ $definitions = [
       'type' => 'MultiLineGraph',
       'identifier_sql' => "SELECT regionid FROM public.dispatch_regionsum WHERE regionid = :primary LIMIT 1",
       'identifier_params' => [],
-      'data_sql' => "SELECT *
+      'data_sql' => "SELECT *,
+          renwable_cleared + rooftop_estimate AS renewable_rooftop,
+          renwable_cleared + bdu_clearedmw + dispatchableload + rooftop_estimate AS renewable_bdu_load
         FROM public.graph_dispatch_regionsum
         WHERE regionid = :primary
         AND settlementdate       >= DATE_TRUNC('hour', NOW() - CAST(:interval AS Interval) + INTERVAL '5 min')
@@ -186,14 +188,14 @@ $definitions = [
       ],
       'string_params' => [],
       'data_x_minmax' => ['field' => 'settlementdate'],
-      'data_y_max' => ['startat' => 0, 'fields' => ['underlying_demand','dispatchablegeneration','demand_and_nonschedgen']],
+      'data_y_max' => ['startat' => 0, 'fields' => ['underlying_demand','dispatchablegeneration','demand_and_nonschedgen', 'renewable_bdu_load']],
       'data_y_min' => ['startat' => 0, 'fields' => ['totaldemand','dispatchableload','bdu_clearedmw_load']],
       'settings' => [
-        'colours' => ['purple', 'purple', 'purple', 'purple', 'orange', 'orange', 'yellow', 'darkred','red','red', 'blue', 'blue', 'yellowgreen', 'yellowgreen', 'olive', 'olive', 'mediumaquamarine', 'green', 'brown', 'magenta'],
-        'line_dash' => [  '0,1',   '0,1',      '1',      '1',      '1',    '0,1',    '0,1',     '1,5',  '1',  '0',    '1',    '0',            '1',           '0',     '1',     '0',                '0',     '0',     '0',       '0'],
-        'line_stroke_width' => [2,     2,        1,        1,        1,        2,        0,         1,    1,    2,     1,       2,              1,             1,       1,       1,                  1,       2,       2,         2],
-        'fill_under' => [     1,       1,        0,        0,        0,        1,        1,         0,    0,    0,     0,       0,              0,             0,       0,       0,                  0,       0,       0,         0],
-        'fill_opacity' => [ 0.5,     0.5,        0,        0,        0,      0.5,      0.2,         0,    0,    0,     0,       0,              0,             0,       0,       0,                  0,       0,       0,         0],
+        'colours' => ['purple', 'purple', 'purple', 'purple', 'orange', 'orange', 'yellow', 'darkred','red','red', 'blue', 'blue',  'yellowgreen', 'yellowgreen', 'olive', 'olive', 'mediumaquamarine', 'green', 'green', 'brown', 'magenta'],
+        'line_dash' => [  '0,1',   '0,1',      '1',      '1',      '1',    '0,1',    '0,1',     '1,5',  '1',  '0',    '1',    '0',            '1',           '0',     '1',     '0',                '0',     '0',     '1,5',     '0',     '0'],
+        'line_stroke_width' => [2,     2,        1,        1,        1,        2,        0,         1,    1,    2,     1,       2,              1,             1,       1,       1,                  1,       2,       1,       2,         2],
+        'fill_under' => [     1,       1,        0,        0,        0,        1,        1,         0,    0,    0,     0,       0,              0,             0,       0,       0,                  0,       0,       0,       0,         0],
+        'fill_opacity' => [ 0.5,     0.5,        0,        0,        0,      0.5,      0.2,         0,    0,    0,     0,       0,              0,             0,       0,       0,                  0,       0,       0,       0,         0],
         'graph_title' => '{primary} Dispatch Regional Summary + P5 Forecast',
         'label' => [
           [$graphWidth/2, 40, "Dispatch values are what was supposed to happen in the next 5 minutes, not what happened in hindsight\nCoal, Gas and Hydro are SCADA data and doesn't consider powerline losses, hence a 0.9 multiplier, hence an estimate (see TAS1)", 'font_size'=>8],
@@ -203,14 +205,14 @@ $definitions = [
           'BDU Gen/Load',null,null,'[Dashed are Min or Max]',null,'Dispatched Load w/o BDU','Est. Small/Roof Solar',
           'Est. Underlying Demand','Market Demand','Operational Demand',
           'Reserve Generation','Dispatched Generation',
-          null,null,null,null,null,'Solar+Wind+(Hydro*0.9)',
+          null,null,null,null,null,'Solar+Wind+(Hydro*0.9)','Renew+BDU+Load+Roof',
           '(Coal+Gas(Pipeline))*0.9',null
         ],
         'legend_order' => [
           7,8,9,
           10,11,
-          12,13,14,15,16,17,
-          18,19,
+          12,13,14,15,16,17,18,
+          19,20,
           6,4,5,0,1,2,3,
         ],
         'structure' => [
@@ -220,7 +222,7 @@ $definitions = [
             'underlying_demand', 'totaldemand', 'demand_and_nonschedgen',
             'remaininggeneration', 'dispatchablegeneration',
             'ss_solar_uigf', 'ss_solar_clearedmw', 'ss_wind_uigf', 'ss_wind_clearedmw', 'hydro', 'renwable_cleared',
-            'coal_gas', 'wdr_dispatched'
+            'renewable_bdu_load', 'coal_gas', 'wdr_dispatched'
           ]
         ]
       ]
@@ -229,7 +231,10 @@ $definitions = [
     'dispatch_nemsum' => [
       'copy' => 'dispatch_regionsum',
       'identifier_sql' => "SELECT 1 WHERE :primary = 'NEM'",
-      'data_sql' => "SELECT * FROM public.graph_dispatch_nemsum
+      'data_sql' => "SELECT *,
+          renwable_cleared + rooftop_estimate AS renewable_rooftop,
+          renwable_cleared + bdu_clearedmw + dispatchableload + rooftop_estimate AS renewable_bdu_load
+        FROM public.graph_dispatch_nemsum
         WHERE :primary = 'NEM'
         AND settlementdate       >= DATE_TRUNC('hour', NOW() - CAST(:interval AS Interval) + INTERVAL '5 min')
         ORDER BY settlementdate",
