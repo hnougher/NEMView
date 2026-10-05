@@ -101,9 +101,10 @@ $definitions = [
         'marker_size' => 0,
         'marker_type' => 'circle',
         'pad_bottom' => -5, # Default 10
-        'pad_left' => -5, # Default 10
-        'pad_right' => 0, # Default 10
+        'pad_left' => 0, # Default 10
+        'pad_right' => -5, # Default 10
         'pad_top' => 0, # Default 10, no effect with title
+        'axis_right' => true, # Put the Y axit on the right
       ]
     ]
   ],
